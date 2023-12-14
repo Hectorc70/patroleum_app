@@ -1,16 +1,15 @@
-# patroleum_app
+# video\_player\_android
 
-A new Flutter project.
+The Android implementation of [`video_player`][1].
 
-## Getting Started
+## Usage
 
-This project is a starting point for a Flutter application.
+This package is [endorsed][2], which means you can simply use `video_player`
+normally. This package will be automatically included in your app when you do,
+so you do not need to add it to your `pubspec.yaml`.
 
-A few resources to get you started if this is your first Flutter project:
+However, if you `import` this package to use any of its APIs directly, you
+should add it to your `pubspec.yaml` as usual.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[1]: https://pub.dev/packages/video_player
+[2]: https://flutter.dev/docs/development/packages-and-plugins/developing-packages#endorsed-federated-plugin
