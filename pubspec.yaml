@@ -21,6 +21,7 @@ dependencies:
   url_launcher: ^6.2.2
   star_menu: ^3.1.4
   video_player: ^2.8.1
+  pulsator: ^1.0.0
   patroleum_lib:
     path: ../PatroleumLib-main
 
@@ -35,6 +36,8 @@ topics:
   - video-player
 flutter:
   uses-material-design: true
+  assets:
+  - assets/images/
   plugin:
     implements: video_player
     platforms:

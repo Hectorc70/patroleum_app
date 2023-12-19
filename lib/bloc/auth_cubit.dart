@@ -25,7 +25,7 @@ class AuthCubit extends Cubit<AuthState> {
     return AuthCubit._(
         // AuthState.initial(repository.grant, null, null), repository);
         AuthState.initial(
-            oauth2.AuthorizationCodeGrant('', Uri(), Uri()), null, null),
+            oauth2.AuthorizationCodeGrant('', Uri(), Uri()), null, null, true),
         repository);
   }
 
@@ -33,9 +33,12 @@ class AuthCubit extends Cubit<AuthState> {
   final _logger = Logger('AuthCubit');
 
   Future<void> _getLoggedIn() async {
+    emit(AuthState.setLoadingSplash(true));
+
     final client = await _repository.clientFromCredentials();
     if (client != null) {
       emit(AuthState.finished(client));
+      emit(AuthState.setLoadingSplash(false));
     } else {
       String? pass;
       String? user;
@@ -48,10 +51,17 @@ class AuthCubit extends Cubit<AuthState> {
         pass = p.getString(prefUserPassCredential);
         user = p.getString(prefUserNameCredential);
         if (isAuth != null && isAuth!) {
+          // emit(AuthState.setCredential(null, null, true));
+
           await CredentialLogin(user.toString(), pass.toString());
+        } else {
+          emit(AuthState.setCredential(null, null, false));
         }
       });
     }
+    // print('Holaaaa');
+
+    // emit(AuthState.setLoadingSplash(false));
   }
 
   Future<String> CredentialLogin(String usr, String pwd) async {
@@ -59,11 +69,14 @@ class AuthCubit extends Cubit<AuthState> {
     print('whatsgoinon');
     return await client.login(usr, pwd).then((value) {
       if (client.authenticated == true) {
-        emit(AuthState.setCredential(usr, pwd));
+        emit(AuthState.setCredential(usr, pwd, false));
+
         savePrefsAuthUser(isAuth: true, password: pwd, user: usr);
       } else {
+        emit(AuthState.setLoadingSplash(false));
         print("not auth");
         savePrefsAuthUser(isAuth: false, password: '', user: '');
+
         // notify error in state ?
         // emit()
       }
@@ -91,7 +104,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void setCredential(String usr, String pwd) {
-    emit(AuthState.setCredential(usr, pwd));
+    emit(AuthState.setCredential(usr, pwd, false));
   }
 
   Future<void> login() async {
@@ -128,7 +141,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> logout() async {
     // final state = this.state;
     if (state.isFinished) {
-      emit(AuthState.setCredential(null, null));
+      emit(AuthState.setCredential(null, null, false));
       savePrefsAuthUser(isAuth: false, password: '', user: '');
       // if (state.client != null) await _repository.logout(state.client!);
       // emit(AuthState.initial(_repository.grant, null, null));
